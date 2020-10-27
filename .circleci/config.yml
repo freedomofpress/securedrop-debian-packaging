@@ -521,6 +521,24 @@ workflows:
       - build-buster-securedrop-keyring
       - make-dom0-rpm
 
+  build-nightlies-once:
+    jobs:
+      - build-nightly-buster-securedrop-client
+      - build-nightly-buster-securedrop-proxy:
+          requires:
+            - build-nightly-buster-securedrop-client
+      - build-nightly-buster-securedrop-export:
+          requires:
+            - build-nightly-buster-securedrop-proxy
+      - build-nightly-buster-securedrop-log:
+          requires:
+            - build-nightly-buster-securedrop-export
+      - build-nightly-buster-securedrop-workstation-svs-disp:
+          requires:
+            - build-nightly-buster-securedrop-log
+      - build-nightly-buster-securedrop-workstation-config:
+          requires:
+            - build-nightly-buster-securedrop-workstation-svs-disp
   # Nightly jobs for each package are run in series to ensure there are no
   # conflicts or race conditions when committing deb packages to git-lfs.
   # Each nightly job requires the completion of the previous task in the sequence.
